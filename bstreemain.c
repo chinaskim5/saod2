@@ -10,10 +10,13 @@ int main ()
     bstree_add(tree, tr[2],"YoYo");
     
     node = bstree_lookup(tree,tr[2]);
-    printf("Value = %s %s\n",node->key, node->value);
+    printf("Value = %s | %s\n",node->key, node->value);
     
     node = bstree_min(tree);
-    printf("Min value= %s %s\n",node->key, node->value);
+    printf("Min value= %s | %s\n",node->key, node->value);
+    
+    node = bstree_max(tree);
+    printf("Max value= %s | %s\n",node->key, node->value);
     
     return 0;
     
