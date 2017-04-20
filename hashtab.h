@@ -1,5 +1,5 @@
-#ifndef "HASHTAB_H"
-#define "HASHTAB_H"
+#ifndef HASHTAB_H
+#define HASHTAB_H
 
 #include <string.h>
 #include <stdio.h>
@@ -13,7 +13,7 @@ typedef struct hash_tabl{
 	int value;
 	
 	struct hash_tabl *next;
-}listnode; 
+}listnode;
 
 listnode *hashtab[HASHTAB_SIZE];
 unsigned int hashtab_hash(char *key);
