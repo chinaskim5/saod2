@@ -2,9 +2,9 @@
 
 
 
-bstree *bstree_create(char *key,char *value){
+bstree *bstree_create(char *key,int value){
 
-    bstree *node=(bstree *)malloc(sizeof(node));
+    bstree *node=malloc(sizeof(*node));
     if (node != NULL){
 	node->key=key;
 	node->value=value;
@@ -14,7 +14,7 @@ bstree *bstree_create(char *key,char *value){
     return node;
 }
 
-bstree *bstree_add(bstree *tree,char *key, char *value){
+bstree *bstree_add(bstree *tree,char *key, int value){
     bstree *parent,*node;
     
     if (tree == NULL)
