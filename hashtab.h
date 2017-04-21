@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define HASHTAB_SIZE 10
-#define HASHTAB_MUL 5
+#define HASHTAB_SIZE 100000
+#define HASHTAB_MUL 10
 
 typedef struct hash_tabl{
 	char *key;
