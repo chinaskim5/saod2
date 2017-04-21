@@ -16,6 +16,21 @@ unsigned int hashtab_hash(char *key)
 
 }
 
+unsigned int hashtab_hash_xor(char *key)
+{
+    unsigned char *p = key;
+    unsigned h = 0;
+    int i;
+    
+    for (i=0; i < 25 ; i++)
+    {
+     h^=p[i];
+    }
+    return h;
+
+
+}
+
 void hashtab_init(listnode **hashtab)
 {
     int i;

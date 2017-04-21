@@ -17,7 +17,7 @@ typedef struct hash_tabl{
 
 listnode *hashtab[HASHTAB_SIZE];
 unsigned int hashtab_hash(char *key);
-
+unsigned int hashtab_hash_xor(char *key);
 void hashtab_init(listnode **hashtab);
 
 void hashtab_add(listnode **hashtab, char *key, int value);
