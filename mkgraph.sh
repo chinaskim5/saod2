@@ -3,7 +3,6 @@ set terminal png size 800,480 enhanced font 'Arial, 16'
 set output 'ex1.png'
 
 set style line 1 linecolor rgb 'red' linetype 1 linewidth 2
-set style line 2 linecolor rgb 'blue' linetype 1 linewidth 2
 
 set border linewidth 1
 set key top left
@@ -19,5 +18,4 @@ set rmargin 4
 set tmargin 2
 set mxtics
 
-plot "yo1.txt" using 1:2 title "Bstree(ex1)" with linespoints ls 1,\
-    "yo2.txt" using 1:2 title "Hashtab(ex1)" with linespoints ls 2
+plot "out.txt" using 1:2 title "Bstree(ex1)" with linespoints ls 1

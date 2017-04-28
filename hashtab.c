@@ -4,100 +4,88 @@
 #include <stdlib.h>
 
 
+unsigned int hashtab_hash_djb(char *key)
+{
+    unsigned int hash = 5381;
+    int c;
+
+    while (c = *key++)
+        hash = ((hash << 5) + hash) + c;
+
+    return hash % 100;
+}
+
 unsigned int hashtab_hash(char *key)
 {
-    unsigned int h = 0;
-    char *p;
-    
-    for (p=key; *p != '\0';p++){
-	h = h * HASHTAB_MUL + (unsigned int) *p;
+	unsigned int value = 0;
+
+	for (int i = 0; key[i] != '\0'; i++) {
+		if (key[i] == '\n') {
+			continue;
+		}	
+		value += key[i];		
 	}
-    return h % HASHTAB_SIZE;
 
+	return value % 100;
 }
 
-unsigned int hashtab_hash_xor(char *key)
+void hashtab_init(Node **hashtab)
 {
-    unsigned char *p = key;
-    unsigned h = 0;
-    int i;
-    
-    for (i=0; i < 25 ; i++)
-    {
-     h^=p[i];
-    }
-    return h;
-
-
-}
-
-void hashtab_init(listnode **hashtab)
-{
-    int i;
-    for(i=0; i < HASHTAB_SIZE; i++) 
-    {
-	hashtab[i] = NULL;
-    }
-
-
-}
-
-void hashtab_add(listnode **hashtab, char *key, int value)
-{
-    listnode *node;
-    
-    int index = hashtab_hash(key);
-    
-    node = malloc(sizeof(*node));
-    
-    if (node != NULL)
-    {
-	node->key = key;
-	node->value = value;
-	node->next = hashtab[index];
-	hashtab[index] = node;
-    }
-    
-    
-}
-
-listnode *hashtab_lookup(listnode **hashtab, char *key)
-{
-    int index;
-    listnode *node;
-    
-    index = hashtab_hash(key);
-    for (node = hashtab[index]; node != NULL; node = node->next)
-    {
-	if(strcmp(node->key, key) == 0)
-	    return node;
-    }
-    return NULL;
-}
-
-
-
-void hashtab_delete(listnode **hashtab, char *key)
-{
-    int index;
-    listnode *p, *prev = NULL;
-    
-    index = hashtab_hash(key);
-    for (p=hashtab[index]; p !=NULL; p = p->next)
-    {
-	if(strcmp(p->key,key) == 0)
-	{
-	    if (prev == NULL)
-		hashtab[index] = p->next;
-	else
-	    prev->next = p->next;
-	free(p);
-	return;
+	for (int i = 0; i < 100; i++) {
+		hashtab[i] = NULL;
 	}
-	prev = p;
-    }
 }
 
+void hashtab_add(Node **hashtab, char *key, int value)
+{
+	Node *node,*k;
 
+	//int index = hashtab_hash(key);
+	int index = hashtab_hash_djb(key);
 
+	node = malloc(sizeof(*node));
 
+	if (node) {
+		node->value = value;
+		node->key = key;
+		node->next=hashtab[index];
+		hashtab[index] = node;
+		
+}
+}
+
+Node *hashtab_lookup(Node **hashtab, char *key)
+{
+	int index;
+	Node *node;
+
+	index = hashtab_hash(key);
+
+	for (node = hashtab[index]; node != NULL; node = node->next) {
+		if (strcmp(node->key, key) == 0) {
+			return node;
+		}
+	}
+	return NULL;
+}
+
+void hashtab_delete(Node **hashtab, char *key)
+{
+	int index;
+	Node *p, *prev = NULL;
+
+	index = hashtab_hash(key);
+
+	for (p = hashtab[index]; p != NULL; p = p->next) {
+		if (strcmp(p->key, key) == 0) {
+			if (prev == NULL) {
+				hashtab[index] = p->next;
+			} else {
+				prev->next = p->next;
+			}
+			free(p);
+			return;
+		}
+		prev = p;
+	}
+}

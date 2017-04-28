@@ -1,81 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "bstree.h"
+#include <string.h>
 
 
-
-bstree *bstree_create(char *key,int value){
-
-    bstree *node=malloc(sizeof(*node));
-    if (node != NULL){
-	node->key=key;
-	node->value=value;
-	node->left=NULL;
-	node->right=NULL;
+bstree *bstree_create(char *key, int value)
+{
+    bstree *tree;
+    tree = malloc(sizeof(*tree));
+    if (tree != NULL) {
+        tree->key = key;
+        tree->value = value;
+        tree->left = NULL;
+        tree->right = NULL;
     }
-    return node;
+    return tree;
 }
 
-bstree *bstree_add(bstree *tree,char *key, int value){
-    bstree *parent,*node;
+bstree *bstree_add(bstree *tree, char *key, int value)
+{
+    if (!tree) {
+        return bstree_create(key, value);
+    }
+    if (*key < *tree->key) {
     
-    if (tree == NULL)
-	return 0;
-    
-    for(parent=tree; tree != NULL; ){
-	parent = tree;
-	if ( key < tree->key)
-	    tree = tree->left;
-	else if (key > tree->key)
-	    tree = tree->right;
-	else
-	    return 0;
+        tree->left =  bstree_add(tree->left, key, value);
     }
-    node = bstree_create(key, value);
-    if (key < parent->key)
-	parent->left= node;
-    else
-	parent->right = node;
+    else {
+        
+        tree->right = bstree_add(tree->right, key, value);
+    }
 
+    return tree;
 }
 
-bstree * bstree_lookup(bstree *tree, char *key){
 
-    while (tree !=NULL){
-	if (key == tree->key){
-	    return tree;
-	} else if (*key < *tree->key){
-	    tree= tree->left;
-	} else {
-	    tree= tree->right;
-	}
+bstree * bstree_lookup(bstree *tree, char *key)
+{
+    while (tree) {
+        if (key == tree->key) {
+            //printf("Found: %s    %d\n", tree->key, tree->value);
+            return tree;
+        }
+        else if (*key < *tree->key)
+            tree = tree->left;
+        else
+            tree = tree->right;
     }
     return tree;
 }
 
-bstree *bstree_max(bstree *tree){
 
-    if (tree == NULL)
-	return NULL;
-	
-    while (tree->right !=NULL)
-	tree = tree->right;
-    return tree;
-}
+bstree *bstree_min(bstree *tree)
+{
+    if (!tree)
+        return NULL;
 
-bstree *bstree_min(bstree *tree){
-
-    if (tree == NULL)
-	return NULL;
-
-    while (tree->left != NULL)
-	tree = tree->left;
-
+    while (tree->left)
+        tree = tree->left;
     return tree;
 }
 
 
 
+bstree *bstree_max(bstree *tree)
+{
+    if (!tree)
+        return NULL;
 
-
-
-
-
+    while (tree->right)
+        tree = tree->right;
+    return tree;
+}

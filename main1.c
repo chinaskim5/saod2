@@ -1,8 +1,11 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "hashtab.h"
-#define size 51203
-#include <sys/time.h>
 #include <time.h>
-
+#include <sys/time.h>
+#define SIZE 51203
+static char words[SIZE][25];
 
 double wtime()
 {
@@ -17,31 +20,46 @@ int getrand(int min, int max)
 }
 
 
-int main ()
+
+
+int main()
 {
-srand((unsigned)time(NULL));
-listnode *node;
-char words[size][25];
-int i;
-double t,g;
-FILE *in = fopen("book.txt","r");
-for ( i=0; i < size; i++)
-{
-    fscanf(in,"%s",words[i]);
-}
-fclose(in);
-FILE *out;
-out = fopen("yo2.txt","w");
-for (i=0; i<size;i++)
-{
-    hashtab_add(hashtab,words[i],i);
-    if (i % 2000 == 0 )
-    {
-	t=wtime();
-	node = hashtab_lookup(hashtab,words[getrand(0,(i-1))]);
-	fprintf(out,"%d \t %.6f\n",i/2000,wtime()-t);
+    Node *node = NULL;
+    double t = 0;
+    int i, step = 0, coll = 0;
+    FILE *f = fopen("book.txt", "r");
+
+    if (f)
+        for (i = 0; i < SIZE; i++) {
+            fscanf(f, "%s", words[i]);
+        }
+    else {
+        printf("Error: in_file doesn't exist!\n");
+        return -1;
     }
-}
+
+    fclose(f);
 
 
+    f = fopen("djbex6sort.txt", "w");
+
+    for (i = 0; i < SIZE; i++) {
+
+        hashtab_add(hashtab, words[i], i);
+
+        if ((i + 1) % 2500 == 0) {
+            step = i / 2500;
+            t = wtime();
+
+            
+                node = hashtab_lookup(hashtab, words[i]);
+            fprintf(f, "%d\t%lf\n", i+1, wtime() - t);
+
+    }
+    }
+
+    fclose(f);
+
+return 0;    
 }
+

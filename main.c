@@ -4,7 +4,8 @@
 #include "bstree.h"
 #include <time.h>
 #include <sys/time.h>
-#define size 51203
+#define SIZE 51203
+static char words[SIZE][25];
 
 double wtime()
 {
@@ -23,29 +24,38 @@ int getrand(int min, int max)
 
 int main()
 {
-    char words[size][25];
-    int i;
-    bstree *tree, *node;
-    double t,g;
-    srand((unsigned)time(NULL));
-    FILE *in = fopen("book.txt","r");
-    for (i=0;i<size;i++)
-    {
-	fscanf(in,"%s",words[i]);
+    int coll=0;
+    bstree *tree = NULL, *node = NULL;
+    double t = 0;
+    int i, step = 0;
+    FILE *f = fopen("book.txt", "r");
+
+    if (f)
+        for (i = 0; i < SIZE; i++) {
+            fscanf(f, "%s", words[i]);
+        }
+    else {
+        printf("Error: file doesn't exists!\n");
+        return -1;
     }
-    fclose(in);
-    tree = bstree_create(words[0],0);
-    FILE *out;
-    out=fopen("yo1.txt","w");
-    for(i=1;i<size;i++)
-    {
-	tree=bstree_add(tree,words[i],i);
-	if (i % 2000 == 0 )
-	{
-	    t = wtime();
-	    node = bstree_lookup (tree, words[getrand(0,(i-1))]);
-	    fprintf(out,"%d \t %.6f\n",i/2000,wtime()-t);
-	}
+
+    fclose(f);
+
+    f = fopen("out.txt", "w");
+
+    for (i = 0; i < SIZE; i++) {
+        tree = bstree_add(tree, words[i], i,&coll);
+
+        if ((i+1) % 2500 == 0) {
+            step = i / 2500;
+            t = wtime();
+                node = bstree_lookup(tree, words[getrand(0, i+1)]);
+            fprintf(f, "%d\t%lf collision: %d\n", i+1, wtime() - t,coll);
+        }
+
     }
-    printf("YOO\n");
+
+    fclose(f);
+
+return 0;
 }
